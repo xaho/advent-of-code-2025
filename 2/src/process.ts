@@ -7,17 +7,28 @@ export function process(input: string) {
             return {start, end};
         })
     let invalidIds = 0;
+    let part2 = 0;
     for (let {start, end} of processed) {
         for (let i = start; i <= end; i++) {
             let str = i.toString(10);
-            if (str.length % 2 !== 0) continue;
             let half = str.length / 2;
-            let left = str.substring(0, half);
-            let right = str.substring(half);
-            if (left === right) {
-                invalidIds += i;
+            if (str.length % 2 === 0) {
+                let left = str.substring(0, half);
+                let right = str.substring(half);
+                if (left === right) {
+                    invalidIds += i;
+                }
+            }
+
+            // part 2:
+            for (let length = 1; length <= half; length++) {
+                if (str.length % length !== 0) continue;
+                if (str.substring(0, length).repeat(str.length / length) === str) {
+                    part2 += i;
+                    break;
+                }
             }
         }
     }
-    return {invalidIds};
+    return {invalidIds, part2};
 }
