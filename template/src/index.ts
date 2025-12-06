@@ -1,6 +1,7 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import {process} from './process.js';
 import * as assert from 'node:assert';
 
 const input = fs.readFileSync('input.txt', 'utf8');
-assert.equal(process(input), 0);
+const example = fs.readFileSync('example.txt', 'utf8');
+assert.equal(process(example), 0);
