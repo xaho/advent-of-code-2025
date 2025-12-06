@@ -9,21 +9,37 @@ const offsets = [
     {xOffset: 1, yOffset: 1},
 ]
 
-export function process(input: string) {
+function getLiftable(grid: string[][], part2 = false) {
+    let liftable = 0;
+    for (let x = 0; x < grid.length; x++) {
+        for (let y = 0; y < grid.length; y++) {
+            const row = grid[y];
+            if (row?.[x] === '@') {
+                const neighbours = getNeighbours(grid, x, y);
+                const paperRolls = countPaperRolls(neighbours);
+                if (paperRolls < 4) {
+                    liftable++;
+                    if (part2) {
+                        row[x] = '.';
+                    }
+                }
+            }
+        }
+    }
+    return liftable;
+}
+
+export function process(input: string, part2 = false) {
     const grid = input.split(/\r?\n/)
         .filter(x => x)
         .map(x => x.split(''))
 
     let liftable = 0;
-    for (let x = 0; x < grid.length; x++) {
-        for (let y = 0; y < grid.length; y++) {
-            if (grid[y]?.[x] === '@') {
-                const neighbours = getNeighbours(grid, x, y);
-                const paperRolls = countPaperRolls(neighbours);
-                if (paperRolls < 4) {
-                    liftable++;
-                }
-            }
+    liftable += getLiftable(grid, part2);
+    if (part2) {
+        let liftedThisIteration;
+        while((liftedThisIteration = getLiftable(grid, part2)) !== 0){
+            liftable += liftedThisIteration
         }
     }
     return liftable;
